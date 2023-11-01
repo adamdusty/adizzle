@@ -1,6 +1,7 @@
-#include <snitch/snitch.hpp>
 #include <adizzle/adizzle.hpp>
+#include <adizzle/assert.hpp>
+#include <snitch/snitch.hpp>
 
-TEST_CASE("Test case", "[greeting]") {
-    REQUIRE(adizzle::get_version() == 1);
+TEST_CASE("Assert") {
+    adizzle::assert(false, "testing");
 }
