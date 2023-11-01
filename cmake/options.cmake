@@ -1,0 +1,1 @@
+option(ADIZZLE_BUILD_TESTS "Build tests for adizzle" OFF)
