@@ -205,3 +205,8 @@ TEST_CASE("Float cast float to double succeeds") {
     auto res = checked_cast<double>(x);
     CHECK(almost_equal(res, x));
 }
+
+TEST_CASE("Float cast double to float fails when larger than float_max") {
+    double x = std::numeric_limits<double>::max();
+    CHECK_THROWS_AS(checked_cast<float>(x), cast_error);
+}
