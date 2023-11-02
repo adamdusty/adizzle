@@ -3,29 +3,26 @@
 #include <format>
 #include <iostream>
 #include <source_location>
+#include <string>
 
-#if defined(_WIN32) && defined(__has_include)
-#if __has_include(<intrin.h>)
-#define DEBUG_BREAK 1
-#endif
-#elif defined(__GNUC__) || defined(__clang__)
-#define BUILTIN_TRAP 1
-#endif
+#include "adizzle/defs.hpp"
 
 namespace adizzle {
 
 constexpr auto assert(const auto& expr,
-                      const char* msg                                 = "",
-                      [[maybe_unused]] const std::source_location loc = std::source_location::current()) noexcept
-    -> void {
-    if(!expr) {
+                      std::string msg                 = "",
+                      const std::source_location& loc = std::source_location::current()) noexcept -> void {
+    if(!static_cast<bool>(expr)) {
+#if defined(NDEBUG) && NDEBUG
+        return;
+#endif
         std::cerr << std::format(
                          "{}:{}: assertion failed in {}: {}", loc.file_name(), loc.line(), loc.function_name(), msg)
                   << std::endl;
 #if DEBUG_BREAK
         ::__debugbreak();
 #elif BUILTIN_TRAP
-        __builtin_trap();
+        __builting_trap();
 #else
         std::abort();
 #endif
