@@ -206,7 +206,61 @@ TEST_CASE("Float cast float to double succeeds") {
     CHECK(almost_equal(res, x));
 }
 
+TEST_CASE("Float cast double to float succeeds in float range") {
+    double x = 10.0;
+    auto res = checked_cast<float>(x);
+    CHECK(almost_equal(res, x));
+}
+
 TEST_CASE("Float cast double to float fails when larger than float_max") {
     double x = std::numeric_limits<double>::max();
     CHECK_THROWS_AS(checked_cast<float>(x), cast_error);
+}
+
+TEST_CASE("Float cast to int succeeds in representable range") {
+    float a  = 256.0F;
+    double b = 512.0;
+
+    auto res_a = checked_cast<std::int64_t>(a);
+    auto res_b = checked_cast<std::int64_t>(b);
+
+    CHECK(res_a == 256_i64);
+    CHECK(res_b == 512_i64);
+}
+
+TEST_CASE("Float to int cast fails when value is not exactly integer representable.") {
+    float x = 33'554'432.0F; // 2^25
+    CHECK_THROWS_AS(checked_cast<std::uint64_t>(x), cast_error);
+}
+
+TEST_CASE("Float to int cast fails when negative value is not exactly integer representable.") {
+    float x = -33'554'432.0F; // 2^25
+    CHECK_THROWS_AS(checked_cast<std::int64_t>(x), cast_error);
+}
+
+TEST_CASE("Float to int cast fails when value is outside int max.") {
+    float a  = 100'000.0F; // Less than 2^(mantissa - 1)
+    double b = 100'000.0;  // Less than 2^(mantissa - 1)
+
+    CHECK_THROWS_AS(checked_cast<std::int16_t>(a), cast_error);
+    CHECK_THROWS_AS(checked_cast<std::int16_t>(b), cast_error);
+}
+
+TEST_CASE("Integral cast to float within exactly representable range succeeds") {
+    std::uint64_t x = 8'388'607;
+    std::uint64_t y = 4'503'599'627'370'496;
+    auto res_f      = checked_cast<float>(x);
+    auto res_d      = checked_cast<double>(y);
+
+    // Floating point equality should be okay here since the values should be exactly representable
+    // Implicitly converted to doubles anyway, I think
+    CHECK(res_f == 8'388'607);
+    CHECK(res_d == 4'503'599'627'370'496);
+}
+
+TEST_CASE("Integral cast fails when outside exact representable range of float") {
+    std::uint64_t x = std::numeric_limits<std::uint64_t>::max();
+
+    CHECK_THROWS_AS(checked_cast<float>(x), cast_error);
+    CHECK_THROWS_AS(checked_cast<double>(x), cast_error);
 }

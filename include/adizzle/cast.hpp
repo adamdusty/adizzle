@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <concepts>
 #include <cstdint>
 #include <format>
@@ -14,10 +15,13 @@ struct cast_error : std::logic_error {
     using std::logic_error::logic_error;
 };
 
+template<typename T>
+concept numeric = std::integral<T> || std::floating_point<T>;
+
 namespace details {
 
 template<std::integral To, std::integral From>
-constexpr auto integral_cast(const From from) -> To {
+constexpr auto int_cast(const From from) -> To {
     // Throw a cast_error if casting from a signed int with a negative value to an unsigned int
     if constexpr(std::is_signed_v<From> && std::is_unsigned_v<To>) {
         if(from < 0) {
@@ -30,15 +34,8 @@ constexpr auto integral_cast(const From from) -> To {
 
     auto to_min = std::numeric_limits<To>::min();
     auto to_max = std::numeric_limits<To>::max();
-    if(std::cmp_less(from, to_min)) {
-        auto msg = std::format(
-            "Narrowing cast less than minimum. Casting {} to type with range [{}, {}]", from, to_min, to_max);
-        throw cast_error(msg);
-    }
-
-    if(std::cmp_greater(from, to_max)) {
-        auto msg = std::format(
-            "Narrowing cast greater than maximum. Casting {} to type with range [{}, {}]", from, to_min, to_max);
+    if(std::cmp_less(from, to_min) || std::cmp_greater(from, to_max)) {
+        auto msg = std::format("Undesirable cast result. Casting {} to type with range [{}, {}]", from, to_min, to_max);
         throw cast_error(msg);
     }
 
@@ -46,19 +43,56 @@ constexpr auto integral_cast(const From from) -> To {
 }
 
 template<std::floating_point To, std::floating_point From>
-constexpr auto floating_point_cast(const From from) -> To {
+constexpr auto fp_cast(const From from) -> To {
 
     auto to_min = std::numeric_limits<To>::min();
     auto to_max = std::numeric_limits<To>::max();
-    if(from < to_min) {
-        auto msg = std::format(
-            "Narrowing cast less than minimum. Casting {} to type with range [{}, {}]", from, to_min, to_max);
+    if(from < to_min || from > to_max) {
+        auto msg = std::format("Undesirable cast result. Casting {} to type with range [{}, {}]", from, to_min, to_max);
         throw cast_error(msg);
     }
 
-    if(from > to_max) {
+    return static_cast<To>(from);
+}
+
+template<std::integral To, std::floating_point From>
+constexpr auto fp_to_int_cast(const From from) -> To {
+    auto to_min = std::numeric_limits<To>::min();
+    auto to_max = std::numeric_limits<To>::max();
+    if(from < to_min || from > to_max) {
+        auto msg =
+            std::format("Undesirable cast result. Casting `{}` to type with range [{}, {}]", from, to_min, to_max);
+        throw cast_error(msg);
+    }
+
+    auto max_exact_int = std::pow(2, std::numeric_limits<From>::digits - 1);
+    if(std::abs(from) > max_exact_int) {
         auto msg = std::format(
-            "Narrowing cast greater than maximum. Casting {} to type with range [{}, {}]", from, to_min, to_max);
+            "Undesirable cast result. Casting floating point number `{}` beyond maximum exact representable integer {}",
+            from,
+            max_exact_int);
+        throw cast_error(msg);
+    }
+
+    return static_cast<To>(from);
+}
+
+template<std::floating_point To, std::integral From>
+auto int_to_fp_cast(const From from) -> To {
+
+    auto max_exact = std::pow(2, std::numeric_limits<To>::digits - 1);
+    From abs       = from;
+
+    // std::abs only defined for signed integers
+    if constexpr(std::is_signed_v<From>) {
+        abs = std::abs(from);
+    }
+
+    if(abs > max_exact) {
+        auto msg = std::format(
+            "Undesirable cast result. Casting integer `{}` beyond maximum exact representable floating point number {}",
+            from,
+            max_exact);
         throw cast_error(msg);
     }
 
@@ -67,29 +101,34 @@ constexpr auto floating_point_cast(const From from) -> To {
 
 } // namespace details
 
-template<typename T>
-concept numeric = std::integral<T> || std::floating_point<T>;
-
 template<numeric To, numeric From>
 constexpr auto checked_cast(const From from) -> To {
     if constexpr(std::same_as<From, To>) {
         return from;
     }
 
-    // TODO:
-    //  - Account for floating point to integral
-    //  - Account for floating point to integral not-exact
-    //  - Account for floating point to integral when from > To::max()
-    //  - Account for integral to floating point
-    //  - Account for integral to floating point outside representable range (2^23 float, 2^53 double)
-
     if constexpr(std::is_integral_v<From> && std::is_integral_v<To>) {
-        return details::integral_cast<To>(from);
+        return details::int_cast<To>(from);
     } else if constexpr(std::is_floating_point_v<From> && std::is_floating_point_v<To>) {
-        return details::floating_point_cast<To>(from);
+        return details::fp_cast<To>(from);
+    } else if constexpr(std::is_floating_point_v<From> && std::is_integral_v<To>) {
+        return details::fp_to_int_cast<To>(from);
+    } else if(std::is_integral_v<From> && std::is_floating_point_v<To>) {
+        return details::int_to_fp_cast<To>(from);
     } else {
         throw cast_error("Unimplemented");
     }
+}
+
+// Converts to static_cast<To>(from) in NDEBUG
+// Otherwise, checks if cast causes undesirable behavior
+template<numeric To, numeric From>
+constexpr auto debug_cast(const From from) -> To {
+#if defined(NDEBUG) && NDEBUG
+    return static_cast<To>(from);
+#else
+    checked_cast<To>(from);
+#endif
 }
 
 } // namespace adizzle
