@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.27)
 project(
     adizzle
     VERSION 0.1.0
-    DESCRIPTION "A short description"
-    LANGUAGES CXX
+    DESCRIPTION "Utility library for personal projects"
+    LANGUAGES NONE
 )
 
 # Include utilities
@@ -14,13 +14,8 @@ include(cmake/compile-options.cmake)
 include(cmake/dependencies.cmake)
 
 # Declare library
-add_library(adizzle_adizzle)
+add_library(adizzle_adizzle INTERFACE)
 add_library(adizzle::adizzle ALIAS adizzle_adizzle)
-
-# Add sources
-target_sources(adizzle_adizzle PRIVATE
-    src/adizzle.cpp
-)
 
 # Add include directory
 # warning_guard adds SYSTEM modifier if the project isn't top level
@@ -46,18 +41,18 @@ generate_export_header(
 )
 
 # Set properties
-set_target_properties(
-    adizzle_adizzle PROPERTIES
-    CXX_VISIBILITY_PRESET "hidden"
-    VISIBILITY_INLINES_HIDDEN YES
-    VERSION "${PROJECT_VERSION}"
-    SOVERSION "${PROJECT_VERSION_MAJOR}"
-    EXPORT_NAME adizzle
-    OUTPUT_NAME adizzle
-)
+# set_target_properties(
+#     adizzle_adizzle PROPERTIES
+#     CXX_VISIBILITY_PRESET "hidden"
+#     VISIBILITY_INLINES_HIDDEN YES
+#     VERSION "${PROJECT_VERSION}"
+#     SOVERSION "${PROJECT_VERSION_MAJOR}"
+#     EXPORT_NAME adizzle
+#     OUTPUT_NAME adizzle
+# )
 
 # Install rules
-if(NOT CMAKE_SKIP_INSTALL_RULES)
+if(ADIZZLE_INSTALL)
   include(cmake/install-rules.cmake)
 endif()
 

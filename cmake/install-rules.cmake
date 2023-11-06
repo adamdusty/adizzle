@@ -5,31 +5,35 @@ if(PROJECT_IS_TOP_LEVEL)
   )
 endif()
 
+# Define install dir since no language set
+set(CMAKE_INSTALL_LIBDIR CACHE PATH "")
+
 set(package adizzle)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-# Set up export components
+install(
+    DIRECTORY include/
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+    COMPONENT adizzle_Development
+)
+
 install(
     TARGETS adizzle_adizzle
     EXPORT adizzleTargets
-    RUNTIME COMPONENT adizzle_Runtime
-    LIBRARY COMPONENT adizzle_Runtime
-    NAMELINK_COMPONENT adizzle_Development
-    ARCHIVE COMPONENT adizzle_Development
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 
 # Write package file for installations
 write_basic_package_version_file(
     "${package}ConfigVersion.cmake"
-    VERSION ${PACKAGE_VERSION}
     COMPATIBILITY SameMajorVersion
+    ARCH_INDEPENDENT
 )
 
 # Allow package maintainers to freely override the path for the configs
 set(
-    adizzle_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/${package}"
+    adizzle_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/${package}"
     CACHE PATH "CMake package config location relative to the install prefix"
 )
 mark_as_advanced(adizzle_INSTALL_CMAKEDIR)
