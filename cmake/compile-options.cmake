@@ -1,5 +1,4 @@
-function(add_dev_compile_opts target visibility)
-    target_compile_options(${target} ${visibility}
+    target_compile_options(adizzle_adizzle INTERFACE
         $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
             -U_FORTIFY_SOURCE
             -D_FORTIFY_SOURCE=3
@@ -65,4 +64,3 @@ function(add_dev_compile_opts target visibility)
             /Zc:throwingNew
             /EHsc>
     )
-endfunction()

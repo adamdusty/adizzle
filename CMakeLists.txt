@@ -10,7 +10,6 @@ project(
 # Include utilities
 include(cmake/options.cmake)
 include(cmake/warning-guard.cmake)
-include(cmake/compile-options.cmake)
 include(cmake/dependencies.cmake)
 
 # Declare library
@@ -34,7 +33,7 @@ target_include_directories(
 #target_link_libraries(adizzle_adizzle)
 
 # Add compile options
-add_dev_compile_opts(adizzle_adizzle INTERFACE)
+include(cmake/compile-options.cmake)
 
 # Generate header for export
 # include(GenerateExportHeader)
