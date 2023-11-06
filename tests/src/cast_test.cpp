@@ -9,8 +9,8 @@
 
 using namespace adizzle;
 
-template<std::floating_point T, std::floating_point U>
-constexpr auto almost_equal(const T a, const U b) -> bool {
+template<std::floating_point T>
+constexpr auto almost_equal(const T a, const T b) -> bool {
     auto a_abs   = std::abs(a);
     auto b_abs   = std::abs(b);
     auto diff    = std::abs(a - b);
@@ -33,12 +33,10 @@ TEST_CASE("Integral cast from smaller type to larger type same value") {
     std::uint8_t u8   = 10;
     std::uint16_t u16 = 10;
     std::uint32_t u32 = 10;
-    std::uint64_t u64 = 10;
 
     std::int8_t i8   = 10;
     std::int16_t i16 = 10;
     std::int32_t i32 = 10;
-    std::int64_t i64 = 10;
 
     CHECK(checked_cast<std::uint16_t>(u8) == u8);
     CHECK(checked_cast<std::uint32_t>(u8) == u8);
@@ -60,12 +58,10 @@ TEST_CASE("Integral cast from smaller type to larger type same value") {
 }
 
 TEST_CASE("Integral cast to smaller type succeeds when value is representable by smaller type") {
-    std::uint8_t u8   = 20;
     std::uint16_t u16 = 20;
     std::uint32_t u32 = 20;
     std::uint64_t u64 = 20;
 
-    std::int8_t i8   = 20;
     std::int16_t i16 = 20;
     std::int32_t i32 = 20;
     std::int64_t i64 = 20;
@@ -142,11 +138,6 @@ TEST_CASE("Integral cast from signed <-> unsigned when value is representable") 
 }
 
 TEST_CASE("Integral cast throws when casting negative value to unsigned") {
-    std::uint8_t u8   = 30;
-    std::uint16_t u16 = 30;
-    std::uint32_t u32 = 30;
-    std::uint64_t u64 = 30;
-
     std::int8_t i8   = -30;
     std::int16_t i16 = -30;
     std::int32_t i32 = -30;
@@ -171,12 +162,10 @@ TEST_CASE("Integral cast throws when casting unsigned to same size int outside o
 }
 
 TEST_CASE("Integral cast throws when casting to smaller type that cannot represent the value") {
-    std::uint8_t u8   = ~0_u8;
     std::uint16_t u16 = ~0_u16;
     std::uint32_t u32 = ~0_u32;
     std::uint64_t u64 = ~0_u64;
 
-    std::int8_t i8   = 127_i8;
     std::int16_t i16 = 32'767;
     std::int32_t i32 = 2'147'483'647;
     std::int64_t i64 = 9'223'372'036'854'775'807;
@@ -203,13 +192,13 @@ TEST_CASE("Integral cast throws when casting to smaller type that cannot represe
 TEST_CASE("Float cast float to double succeeds") {
     float x  = 10.0F;
     auto res = checked_cast<double>(x);
-    CHECK(almost_equal(res, x));
+    CHECK(almost_equal(res, 10.0));
 }
 
 TEST_CASE("Float cast double to float succeeds in float range") {
     double x = 10.0;
     auto res = checked_cast<float>(x);
-    CHECK(almost_equal(res, x));
+    CHECK(almost_equal(res, 10.0f));
 }
 
 TEST_CASE("Float cast double to float fails when larger than float_max") {
@@ -239,7 +228,7 @@ TEST_CASE("Float to int cast fails when negative value is not exactly integer re
 }
 
 TEST_CASE("Float to int cast fails when value is outside int max.") {
-    float a  = 100'000.0F; // Less than 2^(mantissa - 1)
+    float a  = 100'000.0f; // Less than 2^(mantissa - 1)
     double b = 100'000.0;  // Less than 2^(mantissa - 1)
 
     CHECK_THROWS_AS(checked_cast<std::int16_t>(a), cast_error);
@@ -254,8 +243,8 @@ TEST_CASE("Integral cast to float within exactly representable range succeeds") 
 
     // Floating point equality should be okay here since the values should be exactly representable
     // Implicitly converted to doubles anyway, I think
-    CHECK(res_f == 8'388'607);
-    CHECK(res_d == 4'503'599'627'370'496);
+    CHECK(almost_equal(res_f, 8'388'607.000f));
+    CHECK(almost_equal(res_d, 4'503'599'627'370'496.000));
 }
 
 TEST_CASE("Integral cast fails when outside exact representable range of float") {

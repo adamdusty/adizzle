@@ -32,7 +32,11 @@ target_sources(adizzle_tests PRIVATE
 )
 
 # Link libs
-target_link_libraries(adizzle_tests PRIVATE adizzle::adizzle snitch::snitch)
+target_link_libraries(adizzle_tests 
+    PRIVATE
+        snitch::snitch
+        adizzle::adizzle
+)
 
 # Add test
 add_test(NAME adizzle_tests COMMAND adizzle_tests)

@@ -47,7 +47,8 @@ constexpr auto fp_cast(const From from) -> To {
 
     auto to_min = std::numeric_limits<To>::min();
     auto to_max = std::numeric_limits<To>::max();
-    if(from < to_min || from > to_max) {
+    if(static_cast<double>(from) < static_cast<double>(to_min) ||
+       static_cast<double>(from) > static_cast<double>(to_max)) {
         auto msg = std::format("Undesirable cast result. Casting {} to type with range [{}, {}]", from, to_min, to_max);
         throw cast_error(msg);
     }
@@ -57,13 +58,6 @@ constexpr auto fp_cast(const From from) -> To {
 
 template<std::integral To, std::floating_point From>
 constexpr auto fp_to_int_cast(const From from) -> To {
-    auto to_min = std::numeric_limits<To>::min();
-    auto to_max = std::numeric_limits<To>::max();
-    if(from < to_min || from > to_max) {
-        auto msg =
-            std::format("Undesirable cast result. Casting `{}` to type with range [{}, {}]", from, to_min, to_max);
-        throw cast_error(msg);
-    }
 
     auto max_exact_int = std::pow(2, std::numeric_limits<From>::digits - 1);
     if(std::abs(from) > max_exact_int) {
@@ -71,6 +65,14 @@ constexpr auto fp_to_int_cast(const From from) -> To {
             "Undesirable cast result. Casting floating point number `{}` beyond maximum exact representable integer {}",
             from,
             max_exact_int);
+        throw cast_error(msg);
+    }
+
+    auto to_min = std::numeric_limits<To>::min();
+    auto to_max = std::numeric_limits<To>::max();
+    if(from < to_min || from > to_max) {
+        auto msg =
+            std::format("Undesirable cast result. Casting `{}` to type with range [{}, {}]", from, to_min, to_max);
         throw cast_error(msg);
     }
 

@@ -1,5 +1,5 @@
-function(add_dev_compile_opts target)
-    target_compile_options(${target} PRIVATE
+function(add_dev_compile_opts target visibility)
+    target_compile_options(${target} ${visibility}
         $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
             -U_FORTIFY_SOURCE
             -D_FORTIFY_SOURCE=3
@@ -14,7 +14,7 @@ function(add_dev_compile_opts target)
             -Wcast-qual
             -Wformat=2
             -Wundef
-            -Werror=float-equal
+            -Wfloat-equal
             -Wshadow
             -Wcast-align
             -Wunused

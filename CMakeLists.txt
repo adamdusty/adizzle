@@ -17,11 +17,16 @@ include(cmake/dependencies.cmake)
 add_library(adizzle_adizzle INTERFACE)
 add_library(adizzle::adizzle ALIAS adizzle_adizzle)
 
+set_target_properties(adizzle_adizzle
+    PROPERTIES
+        EXPORT_NAME adizzle
+)
+
 # Add include directory
 # warning_guard adds SYSTEM modifier if the project isn't top level
 target_include_directories(
     adizzle_adizzle ${warning_guard}
-    PUBLIC
+    INTERFACE
     "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
 )
 
@@ -29,16 +34,16 @@ target_include_directories(
 #target_link_libraries(adizzle_adizzle)
 
 # Add compile options
-add_dev_compile_opts(adizzle_adizzle)
+add_dev_compile_opts(adizzle_adizzle INTERFACE)
 
 # Generate header for export
-include(GenerateExportHeader)
-generate_export_header(
-    adizzle_adizzle
-    BASE_NAME adizzle
-    EXPORT_FILE_NAME include/adizzle/export.hpp
-    CUSTOM_CONTENT_FROM_VARIABLE pragma_suppress_c4251
-)
+# include(GenerateExportHeader)
+# generate_export_header(
+#     adizzle_adizzle
+#     BASE_NAME adizzle
+#     EXPORT_FILE_NAME include/adizzle/export.hpp
+#     CUSTOM_CONTENT_FROM_VARIABLE pragma_suppress_c4251
+# )
 
 # Set properties
 # set_target_properties(
