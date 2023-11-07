@@ -6,7 +6,7 @@ if(PROJECT_IS_TOP_LEVEL)
 endif()
 
 # Define install dir since no language set
-set(CMAKE_INSTALL_LIBDIR CACHE PATH "")
+set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "")
 
 set(package adizzle)
 include(GNUInstallDirs)
