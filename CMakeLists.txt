@@ -29,31 +29,8 @@ target_include_directories(
     "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
 )
 
-# Include and link dependencies
-#target_link_libraries(adizzle_adizzle)
-
 # Add compile options
 include(cmake/compile-options.cmake)
-
-# Generate header for export
-# include(GenerateExportHeader)
-# generate_export_header(
-#     adizzle_adizzle
-#     BASE_NAME adizzle
-#     EXPORT_FILE_NAME include/adizzle/export.hpp
-#     CUSTOM_CONTENT_FROM_VARIABLE pragma_suppress_c4251
-# )
-
-# Set properties
-# set_target_properties(
-#     adizzle_adizzle PROPERTIES
-#     CXX_VISIBILITY_PRESET "hidden"
-#     VISIBILITY_INLINES_HIDDEN YES
-#     VERSION "${PROJECT_VERSION}"
-#     SOVERSION "${PROJECT_VERSION_MAJOR}"
-#     EXPORT_NAME adizzle
-#     OUTPUT_NAME adizzle
-# )
 
 # Install rules
 if(NOT ADIZZLE_SKIP_INSTALL)
