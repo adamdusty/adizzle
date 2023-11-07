@@ -56,7 +56,7 @@ include(cmake/compile-options.cmake)
 # )
 
 # Install rules
-if(ADIZZLE_INSTALL)
+if(NOT ADIZZLE_SKIP_INSTALL)
   include(cmake/install-rules.cmake)
 endif()
 
