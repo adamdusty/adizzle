@@ -129,7 +129,7 @@ constexpr auto debug_cast(const From from) -> To {
 #if defined(NDEBUG) && NDEBUG
     return static_cast<To>(from);
 #else
-    checked_cast<To>(from);
+    return checked_cast<To>(from);
 #endif
 }
 
