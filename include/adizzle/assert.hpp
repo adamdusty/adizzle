@@ -27,7 +27,7 @@ constexpr auto assert(const auto& expr,
 }
 
 #if defined(NDEBUG) && NDEBUG
-#define ADIZZLE_ASSERT(expr, msg) ((void)expr)
+#define ADIZZLE_ASSERT(expr, msg) ((void)(expr))
 #else
 #define ADIZZLE_ASSERT(expr, msg) assert(expr, msg)
 #endif
