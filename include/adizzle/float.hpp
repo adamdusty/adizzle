@@ -15,14 +15,6 @@ constexpr auto almost_equal(const T a, const T b) -> bool {
     auto denorm  = std::numeric_limits<decltype(max_val)>::denorm_min();
     auto epsilon = std::numeric_limits<decltype(max_val)>::epsilon() * max_val;
 
-    if(a == b) {
-        return true;
-    }
-
-    if(a == 0 || b == 0 || ((a_abs + b_abs) < denorm)) {
-        return diff < (epsilon * denorm);
-    }
-
     return (diff / std::min(a_abs + b_abs, max_val)) < epsilon;
 }
 
