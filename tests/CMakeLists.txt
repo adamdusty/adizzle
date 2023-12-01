@@ -29,6 +29,7 @@ add_executable(adizzle_tests)
 # Add test sources
 target_sources(adizzle_tests PRIVATE
     src/cast_test.cpp
+    src/string_test.cpp
 )
 
 # Link libs
