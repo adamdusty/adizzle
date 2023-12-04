@@ -64,3 +64,12 @@ TEST_CASE("trim") {
     expected = std::string("pregnancy");
     CHECK(actual == expected);
 }
+
+TEST_CASE("split") {
+    auto input = std::string("11,22,33,44,55,66");
+
+    auto actual   = adizzle::split(input, ',');
+    auto expected = std::vector<std::string>{"11", "22", "33", "44", "55", "66"};
+
+    CHECK(actual == expected);
+}

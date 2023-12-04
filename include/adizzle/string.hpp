@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <string>
+#include <vector>
 
 namespace adizzle {
 
@@ -40,6 +41,27 @@ constexpr auto trim(std::string_view str) -> std::string {
     }
 
     return std::string(str.substr(0, end_idx));
+}
+
+constexpr auto split(const std::string& str, char delim) -> std::vector<std::string> {
+    auto results = std::vector<std::string>();
+
+    size_t index = 0;
+    auto current = std::string();
+    while(index < str.size()) {
+        if(str.at(index) == delim) {
+            results.emplace_back(current);
+            current = std::string();
+            ++index;
+            continue;
+        }
+
+        current += str.at(index++);
+    }
+
+    results.emplace_back(current);
+
+    return results;
 }
 
 } // namespace adizzle
