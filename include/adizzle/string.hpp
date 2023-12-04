@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cctype>
+#include <ranges>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace adizzle {
@@ -43,23 +45,13 @@ constexpr auto trim(std::string_view str) -> std::string {
     return std::string(str.substr(0, end_idx));
 }
 
-constexpr auto split(const std::string& str, char delim) -> std::vector<std::string> {
+constexpr auto split(std::string_view str, char delim) -> std::vector<std::string> {
+    auto splits = str | std::views::split(delim);
+
     auto results = std::vector<std::string>();
-
-    size_t index = 0;
-    auto current = std::string();
-    while(index < str.size()) {
-        if(str.at(index) == delim) {
-            results.emplace_back(current);
-            current = std::string();
-            ++index;
-            continue;
-        }
-
-        current += str.at(index++);
+    for(auto split: splits) {
+        results.emplace_back(split.begin(), split.end());
     }
-
-    results.emplace_back(current);
 
     return results;
 }
