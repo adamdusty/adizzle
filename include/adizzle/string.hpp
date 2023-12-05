@@ -46,7 +46,7 @@ constexpr auto trim(std::string_view str) -> std::string {
 }
 
 constexpr auto split(std::string_view str, char delim) -> std::vector<std::string> {
-    auto splits = str | std::views::split(delim);
+    auto splits = str | std::views::split(delim) | std::views::filter([](auto str) { return !str.empty(); });
 
     auto results = std::vector<std::string>();
     for(auto split: splits) {
