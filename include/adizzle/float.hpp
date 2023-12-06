@@ -26,4 +26,9 @@ constexpr auto almost_equal(const T a, const T b) -> bool {
     return (diff / std::min(a_abs + b_abs, max_val)) < epsilon;
 }
 
+template<std::floating_point T>
+constexpr auto almost_equal(const T a, const T b, const T diff) -> bool {
+    return std::abs(a - b) < diff;
+}
+
 } // namespace adizzle

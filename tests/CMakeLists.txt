@@ -30,6 +30,7 @@ add_executable(adizzle_tests)
 target_sources(adizzle_tests PRIVATE
     src/cast_test.cpp
     src/string_test.cpp
+    src/float_test.cpp
 )
 
 # Link libs
