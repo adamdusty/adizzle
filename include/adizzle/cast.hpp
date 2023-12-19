@@ -82,7 +82,7 @@ constexpr auto fp_to_int_cast(const From from) -> To {
 template<std::floating_point To, std::integral From>
 auto int_to_fp_cast(const From from) -> To {
 
-    auto max_exact = std::pow(2, std::numeric_limits<To>::digits - 1);
+    auto max_exact = static_cast<std::int64_t>(std::pow(2, std::numeric_limits<To>::digits - 1));
     From abs       = from;
 
     // std::abs only defined for signed integers
@@ -90,7 +90,7 @@ auto int_to_fp_cast(const From from) -> To {
         abs = std::abs(from);
     }
 
-    if(abs > max_exact) {
+    if(std::cmp_greater(abs, max_exact)) {
         auto msg = std::format(
             "Undesirable cast result. Casting integer `{}` beyond maximum exact representable floating point number {}",
             from,

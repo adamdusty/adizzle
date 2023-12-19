@@ -82,3 +82,10 @@ TEST_CASE("split") {
 
     CHECK(actual == expected);
 }
+
+TEST_CASE("contains") {
+    auto input = std::string("Hello, world");
+
+    CHECK(adizzle::contains(input, ", wo"));
+    CHECK_FALSE(adizzle::contains(input, "abc"));
+}

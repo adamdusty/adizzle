@@ -46,7 +46,7 @@ constexpr auto trim(std::string_view str) -> std::string {
 }
 
 constexpr auto split(std::string_view str, char delim) -> std::vector<std::string> {
-    auto splits = str | std::views::split(delim) | std::views::filter([](auto str) { return !str.empty(); });
+    auto splits = str | std::views::split(delim) | std::views::filter([](auto s) { return !s.empty(); });
 
     auto results = std::vector<std::string>();
     for(auto split: splits) {
@@ -54,6 +54,10 @@ constexpr auto split(std::string_view str, char delim) -> std::vector<std::strin
     }
 
     return results;
+}
+
+constexpr auto contains(std::string_view str, std::string_view search) -> bool {
+    return str.find(search) != std::string_view::npos;
 }
 
 } // namespace adizzle
