@@ -5,5 +5,5 @@
 #define DEBUG_BREAK 1
 #endif
 #elif defined(__GNUC__) || defined(__clang__)
-#define BUILTIN_TRAP
+#define BUILTIN_TRAP 1
 #endif
