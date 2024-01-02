@@ -1,3 +1,4 @@
+#include <adizzle/assert.hpp>
 #include <adizzle/cast.hpp>
 #include <adizzle/float.hpp>
 #include <adizzle/literals.hpp>
@@ -9,6 +10,10 @@
 #include <limits>
 
 using namespace adizzle;
+
+TEST_CASE("Assert") {
+    ADIZZLE_ASSERT(true, "msg");
+}
 
 TEST_CASE("Integral cast from smaller type to larger type same value") {
     std::uint8_t u8   = 10;

@@ -19,7 +19,7 @@ constexpr auto assert(const auto& expr,
 #if DEBUG_BREAK
         ::__debugbreak();
 #elif BUILTIN_TRAP
-        __builting_trap();
+        __builtin_trap();
 #else
         std::abort();
 #endif
