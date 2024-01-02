@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <concepts>
 #include <cstdint>
 #include <format>
 #include <limits>
@@ -9,14 +8,13 @@
 #include <type_traits>
 #include <utility>
 
+#include "adizzle/concepts.hpp"
+
 namespace adizzle {
 
 struct cast_error : std::logic_error {
     using std::logic_error::logic_error;
 };
-
-template<typename T>
-concept numeric = std::integral<T> || std::floating_point<T>;
 
 namespace details {
 
