@@ -1,6 +1,7 @@
 #pragma once
 
 #include "adizzle/concepts.hpp"
+#include "adizzle/float.hpp"
 #include <bit>
 #include <concepts>
 #include <cstdint>
@@ -8,6 +9,17 @@
 #include <type_traits>
 
 namespace adizzle {
+
+namespace detail {
+
+template<std::floating_point T>
+constexpr auto sqrt_newton_raphson(T num, T curr, T prev) -> T {
+    return adizzle::almost_equal(curr, prev)
+               ? curr
+               : sqrt_newton_raphson(num, static_cast<T>(0.5) * (curr + num / curr), curr);
+}
+
+} // namespace detail
 
 template<std::floating_point T>
 constexpr auto fabs(T num) -> T {
@@ -35,6 +47,18 @@ constexpr auto abs(T num) -> T {
     } else {
         return iabs(num);
     }
+}
+
+template<std::floating_point T>
+constexpr auto sqrt(T num) -> std::floating_point auto {
+    return num >= 0 && num < std::numeric_limits<T>::infinity()
+               ? detail::sqrt_newton_raphson(num, num, static_cast<T>(0))
+               : std::numeric_limits<T>::quiet_NaN();
+}
+
+template<std::integral T>
+constexpr auto sqrt(T num) -> std::floating_point auto {
+    return sqrt(static_cast<double>(num));
 }
 
 } // namespace adizzle

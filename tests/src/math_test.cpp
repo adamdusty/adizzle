@@ -2,7 +2,7 @@
 #include <adizzle/math.hpp>
 #include <snitch/snitch.hpp>
 
-TEST_CASE("almost equal with diff") {
+TEST_CASE("constexpr abs") {
     auto a = 10;
     auto b = -10;
     auto c = 3.14159f;
@@ -16,4 +16,14 @@ TEST_CASE("almost equal with diff") {
     CHECK(adizzle::almost_equal(adizzle::abs(d), 3.14159f, 0.00001f));
     CHECK(adizzle::almost_equal(adizzle::abs(e), 3.14159, 0.00001));
     CHECK(adizzle::almost_equal(adizzle::abs(f), 3.14159, 0.00001));
+}
+
+TEST_CASE("constexpr sqrt") {
+    auto a = 100;
+    auto b = 100.0f;
+    auto c = 100.0;
+
+    CHECK(adizzle::almost_equal(adizzle::sqrt(a), 10.0, 0.00001));
+    CHECK(adizzle::almost_equal(adizzle::sqrt(b), 10.0f, 0.00001f));
+    CHECK(adizzle::almost_equal(adizzle::sqrt(c), 10.0, 0.00001));
 }

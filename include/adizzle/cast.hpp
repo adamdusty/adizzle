@@ -16,7 +16,7 @@ struct cast_error : std::logic_error {
     using std::logic_error::logic_error;
 };
 
-namespace details {
+namespace detail {
 
 template<std::integral To, std::integral From>
 constexpr auto int_cast(const From from) -> To {
@@ -99,7 +99,7 @@ auto int_to_fp_cast(const From from) -> To {
     return static_cast<To>(from);
 }
 
-} // namespace details
+} // namespace detail
 
 template<numeric To, numeric From>
 constexpr auto checked_cast(const From from) -> To {
@@ -108,13 +108,13 @@ constexpr auto checked_cast(const From from) -> To {
     }
 
     if constexpr(std::is_integral_v<From> && std::is_integral_v<To>) {
-        return details::int_cast<To>(from);
+        return detail::int_cast<To>(from);
     } else if constexpr(std::is_floating_point_v<From> && std::is_floating_point_v<To>) {
-        return details::fp_cast<To>(from);
+        return detail::fp_cast<To>(from);
     } else if constexpr(std::is_floating_point_v<From> && std::is_integral_v<To>) {
-        return details::fp_to_int_cast<To>(from);
+        return detail::fp_to_int_cast<To>(from);
     } else if(std::is_integral_v<From> && std::is_floating_point_v<To>) {
-        return details::int_to_fp_cast<To>(from);
+        return detail::int_to_fp_cast<To>(from);
     } else {
         throw cast_error("Unimplemented");
     }
