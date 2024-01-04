@@ -12,6 +12,8 @@
 
 namespace adizzle {
 
+using std::numeric_limits;
+
 struct cast_error : std::logic_error {
     using std::logic_error::logic_error;
 };
@@ -19,7 +21,7 @@ struct cast_error : std::logic_error {
 namespace detail {
 
 template<std::integral To, std::integral From>
-constexpr auto int_cast(const From from) -> To {
+auto int_cast(const From from) -> To {
     // Throw a cast_error if casting from a signed int with a negative value to an unsigned int
     if constexpr(std::is_signed_v<From> && std::is_unsigned_v<To>) {
         if(from < 0) {
@@ -41,7 +43,7 @@ constexpr auto int_cast(const From from) -> To {
 }
 
 template<std::floating_point To, std::floating_point From>
-constexpr auto fp_cast(const From from) -> To {
+auto fp_cast(const From from) -> To {
 
     auto to_min = std::numeric_limits<To>::min();
     auto to_max = std::numeric_limits<To>::max();
@@ -55,9 +57,9 @@ constexpr auto fp_cast(const From from) -> To {
 }
 
 template<std::integral To, std::floating_point From>
-constexpr auto fp_to_int_cast(const From from) -> To {
+auto fp_to_int_cast(const From from) -> To {
 
-    auto max_exact_int = std::pow(2, std::numeric_limits<From>::digits - 1);
+    auto max_exact_int = static_cast<From>(std::pow(2, std::numeric_limits<From>::digits - 1));
     if(std::abs(from) > max_exact_int) {
         auto msg = std::format(
             "Undesirable cast result. Casting floating point number `{}` beyond maximum exact representable integer {}",
@@ -66,8 +68,8 @@ constexpr auto fp_to_int_cast(const From from) -> To {
         throw cast_error(msg);
     }
 
-    auto to_min = std::numeric_limits<To>::min();
-    auto to_max = std::numeric_limits<To>::max();
+    auto to_min = static_cast<From>(numeric_limits<To>::min());
+    auto to_max = static_cast<From>(numeric_limits<To>::max());
     if(from < to_min || from > to_max) {
         auto msg =
             std::format("Undesirable cast result. Casting `{}` to type with range [{}, {}]", from, to_min, to_max);
@@ -102,7 +104,7 @@ auto int_to_fp_cast(const From from) -> To {
 } // namespace detail
 
 template<numeric To, numeric From>
-constexpr auto checked_cast(const From from) -> To {
+auto checked_cast(const From from) -> To {
     if constexpr(std::same_as<From, To>) {
         return from;
     }
@@ -123,7 +125,7 @@ constexpr auto checked_cast(const From from) -> To {
 // Converts to static_cast<To>(from) in NDEBUG
 // Otherwise, checks if cast causes undesirable behavior
 template<numeric To, numeric From>
-constexpr auto debug_cast(const From from) -> To {
+auto debug_cast(const From from) -> To {
 #if defined(NDEBUG) && NDEBUG
     return static_cast<To>(from);
 #else
