@@ -42,7 +42,7 @@
             ],
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "ADIZZLE_BUILD_TESTS": "ON"
+                "BUILD_TESTING": "ON"
             }
         }
     ],

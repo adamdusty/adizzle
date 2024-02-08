@@ -38,7 +38,7 @@ if(NOT ADIZZLE_SKIP_INSTALL)
 endif()
 
 # Enable testing
-if(ADIZZLE_BUILD_TESTS)
+if(BUILD_TESTING)
     include(CTest)
     add_subdirectory(tests)
 endif()

@@ -15,8 +15,8 @@ endif()
 include(FetchContent)
 FetchContent_Declare(
     snitch
-    GIT_REPOSITORY https://github.com/cschreib/snitch.git
-    GIT_TAG        v1.2.2
+    GIT_REPOSITORY https://github.com/snitch-org/snitch.git
+    GIT_TAG        v1.2.4
     GIT_SHALLOW    TRUE
     SYSTEM
     FIND_PACKAGE_ARGS # Use system package if installed
@@ -45,8 +45,8 @@ add_test(NAME adizzle_tests COMMAND adizzle_tests)
 
 # Enable test binary to find the DLL if building a shared lib
 if(BUILD_SHARED_LIBS)
-    set_tests_properties(xyz_tests PROPERTIES
+    set_tests_properties(adizzle_tests PROPERTIES
         ENVIRONMENT_MODIFICATION
-            "PATH=path_list_append:$<TARGET_FILE_DIR:xyz::xyz>;PATH=path_list_append:$<TARGET_FILE_DIR:snitch::snitch>"
+            "PATH=path_list_append:$<TARGET_FILE_DIR:snitch::snitch>"
     )
 endif()
