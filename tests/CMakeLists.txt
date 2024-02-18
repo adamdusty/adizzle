@@ -26,6 +26,8 @@ FetchContent_MakeAvailable(snitch)
 # Add test exe
 add_executable(adizzle_tests)
 
+add_dev_compile_opts(adizzle_tests)
+
 # Add test sources
 target_sources(adizzle_tests PRIVATE
     src/cast_test.cpp

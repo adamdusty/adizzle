@@ -29,9 +29,6 @@ target_include_directories(
     "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
 )
 
-# Add compile options
-include(cmake/compile-options.cmake)
-
 # Install rules
 if(NOT ADIZZLE_SKIP_INSTALL)
   include(cmake/install-rules.cmake)
@@ -40,5 +37,6 @@ endif()
 # Enable testing
 if(BUILD_TESTING)
     include(CTest)
+    include(cmake/compile-options.cmake)
     add_subdirectory(tests)
 endif()

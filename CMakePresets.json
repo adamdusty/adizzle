@@ -11,36 +11,18 @@
             "hidden": true,
             "cacheVariables": {
                 "CMAKE_CXX_EXTENSIONS": "OFF",
-                "CMAKE_CXX_STANDARD": "20",
-                "CMAKE_COLOR_DIAGNOSTICS": "ON"
-            }
-        },
-        {
-            "name": "debug",
-            "binaryDir": "./build/debug",
-            "inherits": [
-                "base"
-            ],
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "debug"
-            }
-        },
-        {
-            "name": "release",
-            "binaryDir": "./build/release",
-            "inherits": [
-                "base"
-            ],
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "release"
+                "CMAKE_CXX_STANDARD": "20"
             }
         },
         {
             "name": "dev",
+            "binaryDir": "build/dev",
             "inherits": [
-                "debug"
+                "base"
             ],
             "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "debug",
+                "CMAKE_COLOR_DIAGNOSTICS": "ON",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "BUILD_TESTING": "ON"
             }
@@ -50,14 +32,6 @@
         {
             "name": "dev",
             "configurePreset": "dev"
-        },
-        {
-            "name": "debug",
-            "configurePreset": "debug"
-        },
-        {
-            "name": "release",
-            "configurePreset": "release"
         }
     ],
     "testPresets": [

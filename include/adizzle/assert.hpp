@@ -9,9 +9,9 @@
 
 namespace adizzle {
 
-constexpr auto assert(const auto& expr,
-                      std::string msg                 = "",
-                      const std::source_location& loc = std::source_location::current()) noexcept -> void {
+constexpr auto better_assert(const auto& expr,
+                             std::string msg                 = "",
+                             const std::source_location& loc = std::source_location::current()) noexcept -> void {
     if(!static_cast<bool>(expr)) {
         std::cerr << std::format(
                          "{}:{}: assertion failed in {}: {}", loc.file_name(), loc.line(), loc.function_name(), msg)
@@ -29,7 +29,7 @@ constexpr auto assert(const auto& expr,
 #if defined(NDEBUG) && NDEBUG
 #define ADIZZLE_ASSERT(expr, msg) ((void)(expr))
 #else
-#define ADIZZLE_ASSERT(expr, msg) adizzle::assert(expr, msg)
+#define ADIZZLE_ASSERT(expr, msg) adizzle::better_assert(expr, msg)
 #endif
 
 } // namespace adizzle
