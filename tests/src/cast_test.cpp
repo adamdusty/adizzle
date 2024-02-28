@@ -136,10 +136,10 @@ TEST_CASE("Integral cast throws when casting negative value to unsigned") {
 }
 
 TEST_CASE("Integral cast throws when casting unsigned to same size int outside of its representable range") {
-    std::uint8_t u8   = ~0_u8;
-    std::uint16_t u16 = ~0_u16;
-    std::uint32_t u32 = ~0_u32;
-    std::uint64_t u64 = ~0_u64;
+    std::uint8_t u8   = std::numeric_limits<std::uint8_t>::max();
+    std::uint16_t u16 = std::numeric_limits<std::uint16_t>::max();
+    std::uint32_t u32 = std::numeric_limits<std::uint32_t>::max();
+    std::uint64_t u64 = std::numeric_limits<std::uint64_t>::max();
 
     CHECK_THROWS_AS(checked_cast<std::int8_t>(u8), cast_error);
     CHECK_THROWS_AS(checked_cast<std::int16_t>(u16), cast_error);
@@ -148,9 +148,9 @@ TEST_CASE("Integral cast throws when casting unsigned to same size int outside o
 }
 
 TEST_CASE("Integral cast throws when casting to smaller type that cannot represent the value") {
-    std::uint16_t u16 = ~0_u16;
-    std::uint32_t u32 = ~0_u32;
-    std::uint64_t u64 = ~0_u64;
+    std::uint16_t u16 = std::numeric_limits<std::uint16_t>::max();
+    std::uint32_t u32 = std::numeric_limits<std::uint32_t>::max();
+    std::uint64_t u64 = std::numeric_limits<std::uint64_t>::max();
 
     std::int16_t i16 = 32'767;
     std::int32_t i32 = 2'147'483'647;
